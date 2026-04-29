@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Legacy BJJ">
+<meta name="theme-color" content="#181818">
+<title>Legacy BJJ — Belo Horizonte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #181818;
+    --black2: #242424;
+    --gray: #333;
+    --mid: #888;
+    --light: #ccc;
+    --white: #f5f5f3;
+    --pure: #ffffff;
+    --accent: #f5f5f3;
+    --radius: 16px;
+    --font-serif: 'DM Serif Display', serif;
+    --font-sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+  }
+
+  .screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  .screen.active { display: flex; }
+
+  /* ─── LOGIN ─── */
+  .login-screen {
+    background: var(--black);
+    justify-content: space-between;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,255,255,0.02) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .login-top {
+    padding: 4rem 2rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .login-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 16px;
+  }
+
+  .login-title {
+    font-family: var(--font-serif);
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 0.95;
+    color: var(--pure);
+    margin-bottom: 4px;
+  }
+
+  .login-title em {
+    font-style: italic;
+    color: var(--light);
+  }
+
+  .login-sub {
+    font-size: 12px;
+    color: var(--mid);
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+
+  .login-divider {
+    width: 32px;
+    height: 1px;
+    background: var(--gray);
+    margin: 20px 0;
+  }
+
+  .login-bottom {
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .login-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .login-input-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .login-input {
+    flex: 1;
+    background: var(--black2);
+    border: 1px solid var(--gray);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--pure);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .login-input:focus { border-color: var(--light); }
+  .login-input::placeholder { color: var(--gray); }
+
+  .login-btn {
+    background: var(--pure);
+    color: var(--black);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .login-btn:active { opacity: 0.8; }
+
+  .login-error {
+    color: #e05555;
+    font-size: 12px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .login-footer {
+    font-size: 10px;
+    color: var(--gray);
+    text-align: center;
+    margin-top: 2rem;
+    letter-spacing: 1px;
+  }
+
+  /* ─── APP ─── */
+  .app-screen { background: var(--white); color: var(--black); }
+
+  .app-header {
+    background: var(--black);
+    padding: 3rem 1.5rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app-header::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 4px;
+  }
+
+  .header-name {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--pure);
+    margin-bottom: 12px;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--black2);
+    border: 1px solid var(--gray);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+
+  .belt-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .header-badge span {
+    font-size: 11px;
+    color: var(--light);
+    letter-spacing: 0.5px;
+  }
+
+  .header-logout {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: var(--mid);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+
+  .app-content {
+    flex: 1;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--pure);
+    border-radius: var(--radius);
+    border: 1px solid #e8e8e6;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .card-dark {
+    background: var(--black);
+    border-color: var(--gray);
+  }
+
+  .card-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 14px;
+  }
+
+  .card-dark .card-label { color: #555; }
+
+  /* PROGRESS */
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 12px;
+  }
+
+  .progress-big {
+    font-family: var(--font-serif);
+    font-size: 48px;
+    line-height: 1;
+    color: var(--black);
+  }
+
+  .progress-meta {
+    text-align: right;
+  }
+
+  .progress-meta .total {
+    font-size: 13px;
+    color: var(--mid);
+    display: block;
+  }
+
+  .progress-meta .pct {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--black);
+  }
+
+  .bar-bg {
+    background: #eeeeec;
+    border-radius: 3px;
+    height: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .bar-fill {
+    background: var(--black);
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .progress-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--mid);
+  }
+
+  .faltam-box {
+    margin-top: 14px;
+    background: #f5f5f3;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .faltam-box strong { color: var(--black); }
+  .faltam-box.done { background: #eaf4e0; color: #3a6b10; }
+
+  /* GRADE */
+  .day-row {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0ee;
+  }
+  .day-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .day-row:first-child { padding-top: 0; }
+
+  .day-name {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--mid);
+    width: 32px;
+    padding-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .day-pills { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+
+  .pill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f5f5f3;
+    border-radius: 8px;
+    padding: 6px 12px;
+  }
+
+  .pill-name { font-size: 12px; color: var(--black); font-weight: 400; }
+  .pill-time { font-size: 11px; color: var(--mid); }
+
+  /* PRESENÇA */
+  .presenca-desc {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .presenca-date {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #555;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .presenca-btn {
+    width: 100%;
+    background: var(--pure);
+    color: var(--black);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .presenca-btn:active { opacity: 0.85; }
+  .presenca-btn:disabled { opacity: 0.5; }
+
+  .presenca-success {
+    display: none;
+    text-align: center;
+    padding: 1.5rem 0;
+  }
+
+  .success-ring {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--pure);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 20px;
+    color: var(--black);
+  }
+
+  .presenca-success p {
+    font-size: 14px;
+    color: #aaa;
+  }
+
+  /* NAV */
+  .bottom-nav {
+    background: var(--pure);
+    border-top: 1px solid #ebebeb;
+    display: flex;
+    padding: 10px 0 20px;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px 0;
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+  }
+
+  .nav-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .nav-btn span { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; }
+  .nav-btn.active span { color: var(--black); font-weight: 500; }
+
+  /* LOADING */
+  .loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 2rem;
+  }
+
+  .loader-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ccc;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  .loader-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loader-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+  .err-box {
+    background: #fdf0f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #b03030;
+  }
+
+  /* FADE IN */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- ─── LOGIN ─── -->
+<div class="screen login-screen active" id="loginScreen">
+  <div class="login-bg"></div>
+
+  <div class="login-top">
+    <p class="login-eyebrow">Legacy Brazilian Jiu-Jitsu</p>
+    <h1 class="login-title">Belo<br><em>Horizonte</em></h1>
+    <div class="login-divider"></div>
+    <p class="login-sub">Portal do aluno</p>
+  </div>
+
+  <div class="login-bottom">
+    <label class="login-label">Código do aluno</label>
+    <div class="login-input-wrap">
+      <input class="login-input" type="text" id="codigoInput" placeholder="Ex: ALU001" autocomplete="off" />
+      <button class="login-btn" id="loginBtn" onclick="fazerLogin()">Entrar</button>
+    </div>
+    <p class="login-error" id="loginError"></p>
+    <p class="login-footer">Legacy BJJ · Belo Horizonte</p>
+  </div>
+</div>
+
+<!-- ─── APP ─── -->
+<div class="screen app-screen" id="appScreen">
+  <div class="app-header">
+    <button class="header-logout" onclick="logout()">Sair</button>
+    <p class="header-eyebrow">Bem-vindo de volta</p>
+    <p class="header-name" id="nomeAluno">—</p>
+    <div class="header-badge">
+      <div class="belt-dot" id="beltDot"></div>
+      <span id="faixaAluno">—</span>
+    </div>
+  </div>
+
+  <div class="app-content" id="appContent"></div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav0" onclick="irPara('inicio')">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M3 10L10 3L17 10V17H13V13H7V17H3V10Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+        </svg>
+      </div>
+      <span>Início</span>
+    </button>
+    <button class="nav-btn" id="nav1" onclick="irPara('grade')">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M7 2V5M13 2V5M3 8H17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span>Grade</span>
+    </button>
+    <button class="nav-btn" id="nav2" onclick="irPara('presenca')">
+      <div class="nav-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span>Presença</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyPjc2ciAcwgvhtMwePd_vdeazg_MBVQPQmaE48iPBSUrowpqdz_m5Twwi8jgdCnEw5/exec";
+let alunoAtual = null;
+
+async function apiGet(params) {
+  const url = API_URL + '?' + new URLSearchParams(params);
+  const res = await fetch(url, { redirect: 'follow' });
+  return res.json();
+}
+
+async function apiPost(body) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body),
+    redirect: 'follow'
+  });
+  return res.json();
+}
+
+async function fazerLogin() {
+  const codigo = document.getElementById('codigoInput').value.trim();
+  if (!codigo) return;
+  const btn = document.getElementById('loginBtn');
+  const erro = document.getElementById('loginError');
+  erro.style.display = 'none';
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    const data = await apiGet({ acao: 'login', codigo });
+    if (!data.sucesso) {
+      erro.textContent = data.erro || 'Aluno não encontrado.';
+      erro.style.display = 'block';
+      btn.textContent = 'Entrar';
+      btn.disabled = false;
+      return;
+    }
+    alunoAtual = data;
+    mostrarApp();
+  } catch(e) {
+    erro.textContent = 'Erro de conexão. Verifique sua internet.';
+    erro.style.display = 'block';
+    btn.textContent = 'Entrar';
+    btn.disabled = false;
+  }
+}
+
+function mostrarApp() {
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+
+  document.getElementById('nomeAluno').textContent = alunoAtual.nome || 'Aluno';
+  const grau = alunoAtual.grau ? ` · ${alunoAtual.grau}º grau` : '';
+  document.getElementById('faixaAluno').textContent = `Faixa ${alunoAtual.faixa || '—'}${grau}`;
+
+  const cores = {
+    'Branca':'#ffffff','Cinza':'#9e9e9e','Amarela':'#f5c542',
+    'Laranja':'#f5924e','Verde':'#4caf50','Azul':'#2196f3',
+    'Roxa':'#9c27b0','Marrom':'#795548','Preta':'#444'
+  };
+  document.getElementById('beltDot').style.background = cores[alunoAtual.faixa] || '#fff';
+  irPara('inicio');
+}
+
+function logout() {
+  alunoAtual = null;
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+  document.getElementById('codigoInput').value = '';
+  document.getElementById('loginBtn').textContent = 'Entrar';
+  document.getElementById('loginBtn').disabled = false;
+}
+
+function irPara(tela) {
+  ['nav0','nav1','nav2'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const idx = { inicio: 0, grade: 1, presenca: 2 }[tela];
+  document.getElementById('nav' + idx).classList.add('active');
+  if (tela === 'inicio') renderInicio();
+  else if (tela === 'grade') renderGrade();
+  else if (tela === 'presenca') renderPresenca();
+}
+
+function renderInicio() {
+  const c = document.getElementById('appContent');
+  const aulasFaixa = alunoAtual.aulasNaFaixa || 0;
+  const aulasNec = alunoAtual.aulasNecessarias || 0;
+  const faltam = Math.max(0, aulasNec - aulasFaixa);
+  const pct = aulasNec > 0 ? Math.min(100, Math.round((aulasFaixa / aulasNec) * 100)) : 0;
+
+  c.innerHTML = `
+    <div class="card fade-in">
+      <p class="card-label">Progressão de faixa</p>
+      <div class="progress-top">
+        <span class="progress-big">${aulasFaixa}</span>
+        <div class="progress-meta">
+          <span class="total">de ${aulasNec} aulas</span>
+          <span class="pct">${pct}%</span>
+        </div>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
+      <div class="progress-footer">
+        <span>Aulas concluídas</span>
+        <span>${faltam} restantes</span>
+      </div>
+      ${faltam === 0
+        ? '<div class="faltam-box done">🎽 Você atingiu o mínimo de aulas! Fale com seu professor.</div>'
+        : `<div class="faltam-box">Faltam <strong>${faltam} aulas</strong> para a próxima faixa</div>`}
+    </div>`;
+
+  setTimeout(() => {
+    const fill = document.getElementById('barFill');
+    if (fill) fill.style.width = pct + '%';
+  }, 100);
+}
+
+async function renderGrade() {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+
+  try {
+    const data = await apiGet({ acao: 'grade' });
+    const ordem = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+    const grupos = {};
+    ordem.forEach(d => grupos[d] = []);
+
+    (data.aulas || []).forEach(a => {
+      if (a.dia && grupos[a.dia] !== undefined) grupos[a.dia].push(a);
+    });
+
+    const dias = ordem.filter(d => grupos[d].length > 0);
+    const rows = dias.map(dia => {
+      const pills = grupos[dia]
+        .sort((a, b) => (a.horario || '').localeCompare(b.horario || ''))
+        .map(a => `
+          <div class="pill">
+            <span class="pill-name">${a.modalidade || '—'}</span>
+            <span class="pill-time">${a.horario || ''}</span>
+          </div>`).join('');
+      return `
+        <div class="day-row">
+          <span class="day-name">${dia.substring(0,3)}</span>
+          <div class="day-pills">${pills}</div>
+        </div>`;
+    }).join('');
+
+    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p>${rows || '<p style="font-size:13px;color:#aaa;">Nenhuma aula ativa encontrada.</p>'}</div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p><div class="err-box">Erro ao carregar a grade. Tente novamente.</div></div>`;
+  }
+}
+
+function renderPresenca() {
+  const c = document.getElementById('appContent');
+  const hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  c.innerHTML = `
+    <div class="card-dark card fade-in">
+      <p class="card-label">Confirmar presença</p>
+      <p class="presenca-desc">Registre sua presença na aula de hoje. Cada aula conta para sua progressão de faixa.</p>
+      <div id="presencaForm">
+        <p class="presenca-date">${hoje}</p>
+        <button class="presenca-btn" id="presencaBtn" onclick="confirmarPresenca()">Confirmar presença</button>
+      </div>
+      <div class="presenca-success" id="presencaSuccess">
+        <div class="success-ring">✓</div>
+        <p>Presença confirmada com sucesso!</p>
+      </div>
+    </div>`;
+}
+
+async function confirmarPresenca() {
+  const btn = document.getElementById('presencaBtn');
+  btn.textContent = 'Registrando...';
+  btn.disabled = true;
+
+  try {
+    const data = await apiPost({ acao: 'presenca', alunoId: alunoAtual.id, alunoNome: alunoAtual.nome });
+    if (data.sucesso) {
+      document.getElementById('presencaForm').style.display = 'none';
+      document.getElementById('presencaSuccess').style.display = 'block';
+    } else {
+      btn.textContent = 'Erro — tente novamente';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    btn.textContent = 'Erro — tente novamente';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('codigoInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') fazerLogin();
+});
+</script>
+</body>
+</html>
