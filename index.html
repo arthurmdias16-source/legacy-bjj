@@ -353,8 +353,8 @@ async function renderGrade() {
           const meta = [a.nivel, a.turma, a.professor].filter(Boolean).join(' · ');
           return `
             <div class="pill">
-              <span class="pill-name">${a.modalidade || '—'}</span>
               <span class="pill-time">${a.horario || ''}</span>
+              <span class="pill-name">${a.modalidade || '—'}</span>
               ${meta ? `<span class="pill-meta">${meta}</span>` : ''}
             </div>`;
         }).join('');
