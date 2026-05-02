@@ -23,59 +23,57 @@
     --font-serif: 'DM Serif Display', serif;
     --font-sans: 'DM Sans', sans-serif;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: var(--font-sans);
-    background: var(--black);
-    color: var(--white);
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    overflow-x: hidden;
-  }
-
-  .screen { display: none; flex-direction: column; min-height: 100vh; min-height: -webkit-fill-available; }
+  body { font-family: var(--font-sans); background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+  .screen { display: none; flex-direction: column; min-height: 100vh; }
   .screen.active { display: flex; }
 
   /* LOGIN */
-  .login-screen { background: var(--black); justify-content: space-between; padding: 0; position: relative; overflow: hidden; }
-  .login-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,255,255,0.02) 0%, transparent 60%); pointer-events: none; }
+  .login-screen { background: var(--black); justify-content: space-between; position: relative; overflow: hidden; }
+  .login-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 60%); pointer-events: none; }
   .login-top { padding: 4rem 2rem 2rem; position: relative; z-index: 1; }
   .login-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid); margin-bottom: 16px; }
-  .login-title { font-family: var(--font-serif); font-size: 52px; font-weight: 400; line-height: 0.95; color: var(--pure); margin-bottom: 4px; }
+  .login-title { font-family: var(--font-serif); font-size: 52px; font-weight: 400; line-height: 0.95; color: var(--pure); }
   .login-title em { font-style: italic; color: var(--light); }
-  .login-sub { font-size: 12px; color: var(--mid); margin-top: 16px; letter-spacing: 1px; }
   .login-divider { width: 32px; height: 1px; background: var(--gray); margin: 20px 0; }
+  .login-sub { font-size: 12px; color: var(--mid); letter-spacing: 1px; }
   .login-bottom { padding: 2rem; position: relative; z-index: 1; }
   .login-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; display: block; }
-  .login-input-wrap { display: flex; gap: 10px; align-items: center; }
+  .login-input-wrap { display: flex; gap: 10px; }
   .login-input { flex: 1; background: var(--black2); border: 1px solid var(--gray); border-radius: 10px; padding: 14px 16px; color: var(--pure); font-family: var(--font-sans); font-size: 16px; outline: none; transition: border-color 0.2s; }
   .login-input:focus { border-color: var(--light); }
   .login-input::placeholder { color: var(--gray); }
-  .login-btn { background: var(--pure); color: var(--black); border: none; border-radius: 10px; padding: 14px 20px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
-  .login-btn:active { opacity: 0.8; }
+  .login-btn { background: var(--pure); color: var(--black); border: none; border-radius: 10px; padding: 14px 20px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
   .login-error { color: #e05555; font-size: 12px; margin-top: 10px; display: none; }
   .login-footer { font-size: 10px; color: var(--gray); text-align: center; margin-top: 2rem; letter-spacing: 1px; }
 
-  /* APP */
+  /* APP ALUNO */
   .app-screen { background: var(--white); color: var(--black); }
-  .app-header { background: var(--black); padding: 3rem 1.5rem 1.5rem; position: relative; overflow: hidden; }
-  .app-header::after { content: ''; position: absolute; right: -20px; top: -20px; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); }
+  .app-header { background: var(--black); padding: 3rem 1.5rem 1.5rem; position: relative; }
   .header-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 4px; }
-  .header-name { font-family: var(--font-serif); font-size: 26px; font-weight: 400; color: var(--pure); margin-bottom: 12px; }
+  .header-name { font-family: var(--font-serif); font-size: 26px; color: var(--pure); margin-bottom: 12px; }
   .header-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--black2); border: 1px solid var(--gray); border-radius: 20px; padding: 5px 14px; }
   .belt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .header-badge span { font-size: 11px; color: var(--light); letter-spacing: 0.5px; }
+  .header-badge span { font-size: 11px; color: var(--light); }
   .header-logout { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid var(--gray); border-radius: 8px; padding: 6px 10px; color: var(--mid); font-size: 11px; cursor: pointer; font-family: var(--font-sans); }
-
   .app-content { flex: 1; padding: 1.25rem; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 
+  /* APP PROFESSOR */
+  .prof-screen { background: var(--black); color: var(--white); }
+  .prof-header { background: var(--black2); border-bottom: 1px solid var(--gray); padding: 3rem 1.5rem 1.5rem; position: relative; }
+  .prof-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 4px; }
+  .prof-name { font-family: var(--font-serif); font-size: 24px; color: var(--pure); margin-bottom: 8px; }
+  .prof-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--black); border: 1px solid var(--gray); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--mid); }
+  .prof-content { flex: 1; padding: 1.25rem; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+  .prof-nav { background: var(--black2); border-top: 1px solid var(--gray); display: flex; padding: 8px 0 20px; }
+  .prof-nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 6px 0; background: none; border: none; font-family: var(--font-sans); }
+  .prof-nav-btn span { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #555; }
+  .prof-nav-btn.active span { color: var(--pure); }
+
   /* CARDS */
-  .card { background: var(--pure); border-radius: var(--radius); border: 1px solid #e8e8e6; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-  .card-dark { background: var(--black); border-color: var(--gray); }
+  .card { background: var(--pure); border-radius: var(--radius); border: 1px solid #e8e8e6; padding: 1.25rem; }
+  .card-dark { background: var(--black2); border-color: var(--gray); color: var(--white); }
   .card-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 14px; }
-  .card-dark .card-label { color: #555; }
 
   /* PROGRESS */
   .progress-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
@@ -92,51 +90,60 @@
 
   /* GRADE */
   .day-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0ee; }
-  .day-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .day-row:first-child { padding-top: 0; }
+  .day-row:last-child { border-bottom: none; }
   .day-name { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--mid); width: 32px; padding-top: 3px; flex-shrink: 0; }
   .day-pills { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-
-  .pill {
-    background: #f5f5f3;
-    border-radius: 10px;
-    padding: 8px 12px;
-    display: grid;
-    grid-template-columns: 48px 1fr;
-    gap: 2px 10px;
-    align-items: center;
-  }
-
-  .pill-time { font-size: 12px; color: var(--mid); font-weight: 500; grid-row: 1 / 3; align-self: center; }
+  .pill { background: #f5f5f3; border-radius: 10px; padding: 8px 12px; display: grid; grid-template-columns: 48px 1fr; gap: 2px 10px; }
+  .pill-time { font-size: 12px; color: var(--mid); font-weight: 500; grid-row: 1/3; align-self: center; }
   .pill-name { font-size: 13px; color: var(--black); font-weight: 500; }
   .pill-meta { font-size: 11px; color: var(--mid); }
 
-  /* PRESENÇA */
-  .presenca-desc { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 1.25rem; }
+  /* PRESENÇA ALUNO */
+  .presenca-desc { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 1rem; }
   .presenca-date { font-size: 11px; letter-spacing: 1px; color: #555; margin-bottom: 14px; text-transform: uppercase; }
   .aula-atual-box { background: var(--black2); border: 1px solid var(--gray); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
   .aula-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 4px; }
   .aula-nome { font-size: 14px; color: var(--pure); font-weight: 500; }
-  .presenca-btn { width: 100%; background: var(--pure); color: var(--black); border: none; border-radius: 12px; padding: 16px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; margin-bottom: 10px; }
-  .presenca-btn:active { opacity: 0.85; }
+  .presenca-btn { width: 100%; background: var(--pure); color: var(--black); border: none; border-radius: 12px; padding: 16px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 10px; }
   .presenca-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .correcao-btn { width: 100%; background: transparent; color: #777; border: 1px solid var(--gray); border-radius: 12px; padding: 14px; font-family: var(--font-sans); font-size: 13px; cursor: pointer; }
-  .bloqueado-box { background: var(--black2); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 10px; }
+  .bloqueado-box { background: var(--black2); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
   .bloqueado-box p { font-size: 13px; color: #666; line-height: 1.5; }
   .bloqueado-box strong { color: #aaa; display: block; margin-bottom: 4px; }
+  .ja-registrado-box { background: #eaf4e0; border-radius: 10px; padding: 14px; text-align: center; }
+  .ja-registrado-box p { font-size: 13px; color: #3a6b10; }
   .presenca-success { display: none; text-align: center; padding: 1.5rem 0; }
   .success-ring { width: 48px; height: 48px; border-radius: 50%; background: var(--pure); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; color: var(--black); }
   .presenca-success p { font-size: 13px; color: #aaa; }
   .presenca-success .sub { font-size: 11px; color: #555; margin-top: 6px; }
 
+  /* QR CODE */
+  .qr-container { text-align: center; padding: 1rem 0; }
+  .qr-code { background: var(--pure); border-radius: 12px; padding: 1.5rem; display: inline-block; margin: 1rem 0; }
+  .qr-code canvas { display: block; }
+  .qr-codigo { font-family: var(--font-serif); font-size: 48px; color: var(--pure); letter-spacing: 8px; margin: 0.5rem 0; }
+  .qr-expira { font-size: 11px; color: var(--mid); letter-spacing: 1px; }
+  .qr-timer { font-size: 24px; font-weight: 500; color: var(--pure); margin-top: 8px; }
+  .qr-gerar-btn { width: 100%; background: var(--pure); color: var(--black); border: none; border-radius: 12px; padding: 16px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 1rem; }
+
+  /* CHAMADA KIDS */
+  .chamada-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .chamada-item { display: flex; align-items: center; justify-content: space-between; background: var(--black); border: 1px solid var(--gray); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: border-color 0.2s; }
+  .chamada-item.presente { border-color: #4caf50; background: #1a2e1a; }
+  .chamada-item-nome { font-size: 14px; color: var(--pure); }
+  .chamada-item-faixa { font-size: 11px; color: var(--mid); margin-top: 2px; }
+  .chamada-check { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gray); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .chamada-item.presente .chamada-check { background: #4caf50; border-color: #4caf50; color: #fff; }
+  .chamada-confirmar-btn { width: 100%; background: var(--pure); color: var(--black); border: none; border-radius: 12px; padding: 16px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; cursor: pointer; }
+  .chamada-confirmar-btn:disabled { opacity: 0.4; }
+
   /* NAV */
   .bottom-nav { background: var(--pure); border-top: 1px solid #ebebeb; display: flex; padding: 10px 0 20px; flex-shrink: 0; }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; padding: 6px 0; background: none; border: none; font-family: var(--font-sans); }
-  .nav-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
   .nav-btn span { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; }
   .nav-btn.active span { color: var(--black); font-weight: 500; }
 
-  /* LOADING */
+  /* LOADER */
   .loader { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 2rem; }
   .loader-dot { width: 5px; height: 5px; border-radius: 50%; background: #ccc; animation: blink 1.2s ease-in-out infinite; }
   .loader-dot:nth-child(2) { animation-delay: 0.2s; }
@@ -145,6 +152,9 @@
   .err-box { background: #fdf0f0; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #b03030; }
   @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
   .fade-in { animation: fadeUp 0.4s ease forwards; }
+
+  .info-box { background: var(--black2); border: 1px solid var(--gray); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--mid); margin-bottom: 12px; }
+  .info-box strong { color: var(--pure); display: block; margin-bottom: 4px; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -159,7 +169,7 @@
     <p class="login-sub">Portal do aluno</p>
   </div>
   <div class="login-bottom">
-    <label class="login-label">Código do aluno</label>
+    <label class="login-label">Seu código de acesso</label>
     <div class="login-input-wrap">
       <input class="login-input" type="text" id="codigoInput" placeholder="Ex: ALU001" autocomplete="off" />
       <button class="login-btn" id="loginBtn" onclick="fazerLogin()">Entrar</button>
@@ -169,7 +179,7 @@
   </div>
 </div>
 
-<!-- APP -->
+<!-- APP ALUNO -->
 <div class="screen app-screen" id="appScreen">
   <div class="app-header">
     <button class="header-logout" onclick="logout()">Sair</button>
@@ -180,34 +190,53 @@
       <span id="faixaAluno">—</span>
     </div>
   </div>
-
   <div class="app-content" id="appContent"></div>
-
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav0" onclick="irPara('inicio')">
-      <div class="nav-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10L10 3L17 10V17H13V13H7V17H3V10Z" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
-      </div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10L10 3L17 10V17H13V13H7V17H3V10Z" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
       <span>Início</span>
     </button>
     <button class="nav-btn" id="nav1" onclick="irPara('grade')">
-      <div class="nav-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 2V5M13 2V5M3 8H17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      </div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 2V5M13 2V5M3 8H17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       <span>Grade</span>
     </button>
     <button class="nav-btn" id="nav2" onclick="irPara('presenca')">
-      <div class="nav-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       <span>Presença</span>
     </button>
   </nav>
 </div>
 
+<!-- APP PROFESSOR / GESTOR -->
+<div class="screen prof-screen" id="profScreen">
+  <div class="prof-header">
+    <button class="header-logout" onclick="logout()">Sair</button>
+    <p class="prof-eyebrow" id="profEyebrow">Professor</p>
+    <p class="prof-name" id="profNome">—</p>
+    <div class="prof-badge" id="profBadge">—</div>
+  </div>
+  <div class="prof-content" id="profContent"></div>
+  <nav class="prof-nav">
+    <button class="prof-nav-btn active" id="pnav0" onclick="irParaProf('qr')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="12" width="2" height="2" fill="currentColor"/><rect x="15" y="12" width="2" height="2" fill="currentColor"/><rect x="12" y="15" width="2" height="2" fill="currentColor"/><rect x="15" y="15" width="2" height="2" fill="currentColor"/></svg>
+      <span>QR Code</span>
+    </button>
+    <button class="prof-nav-btn" id="pnav1" onclick="irParaProf('chamada')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h12M4 14h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span>Chamada Kids</span>
+    </button>
+    <button class="prof-nav-btn" id="pnav2" onclick="irParaProf('grade')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 2V5M13 2V5M3 8H17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span>Grade</span>
+    </button>
+  </nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPjc2ciAcwgvhtMwePd_vdeazg_MBVQPQmaE48iPBSUrowpqdz_m5Twwi8jgdCnEw5/exec";
-let alunoAtual = null;
+let usuarioAtual = null;
+let qrTimer = null;
 
 async function apiGet(params) {
   const url = API_URL + '?' + new URLSearchParams(params);
@@ -237,14 +266,15 @@ async function fazerLogin() {
   try {
     const data = await apiGet({ acao: 'login', codigo });
     if (!data.sucesso) {
-      erro.textContent = data.erro || 'Aluno não encontrado.';
+      erro.textContent = data.erro || 'Código não encontrado.';
       erro.style.display = 'block';
       btn.textContent = 'Entrar';
       btn.disabled = false;
       return;
     }
-    alunoAtual = data;
-    mostrarApp();
+    usuarioAtual = data;
+    if (data.tipo === 'professor') mostrarAppProf();
+    else mostrarAppAluno();
   } catch(e) {
     erro.textContent = 'Erro de conexão. Verifique sua internet.';
     erro.style.display = 'block';
@@ -253,26 +283,38 @@ async function fazerLogin() {
   }
 }
 
-function mostrarApp() {
+function mostrarAppAluno() {
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
-  document.getElementById('nomeAluno').textContent = alunoAtual.nome || 'Aluno';
-  const grau = alunoAtual.grau ? ` · ${alunoAtual.grau}º grau` : '';
-  document.getElementById('faixaAluno').textContent = `Faixa ${alunoAtual.faixa || '—'}${grau}`;
-  const cores = { 'Branca':'#ffffff','Cinza':'#9e9e9e','Amarela':'#f5c542','Laranja':'#f5924e','Verde':'#4caf50','Azul':'#2196f3','Roxa':'#9c27b0','Marrom':'#795548','Preta':'#444' };
-  document.getElementById('beltDot').style.background = cores[alunoAtual.faixa] || '#fff';
+  document.getElementById('nomeAluno').textContent = usuarioAtual.nome || 'Aluno';
+  const grau = usuarioAtual.grau ? ` · ${usuarioAtual.grau}º grau` : '';
+  document.getElementById('faixaAluno').textContent = usuarioAtual.faixa ? `Faixa ${usuarioAtual.faixa}${grau}` : 'Faixa não cadastrada';
+  const cores = { 'Branca':'#fff','Cinza':'#9e9e9e','Amarela':'#f5c542','Laranja':'#f5924e','Verde':'#4caf50','Azul':'#2196f3','Roxa':'#9c27b0','Marrom':'#795548','Preta':'#444' };
+  document.getElementById('beltDot').style.background = cores[usuarioAtual.faixa] || '#666';
   irPara('inicio');
 }
 
+function mostrarAppProf() {
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('profScreen').classList.add('active');
+  const isGestor = usuarioAtual.perfil === '👑 Gestor';
+  document.getElementById('profEyebrow').textContent = isGestor ? 'Gestor' : 'Professor';
+  document.getElementById('profNome').textContent = usuarioAtual.nome || '—';
+  document.getElementById('profBadge').textContent = usuarioAtual.perfil || '—';
+  irParaProf('qr');
+}
+
 function logout() {
-  alunoAtual = null;
-  document.getElementById('appScreen').classList.remove('active');
+  usuarioAtual = null;
+  if (qrTimer) clearInterval(qrTimer);
+  ['appScreen','profScreen'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('codigoInput').value = '';
   document.getElementById('loginBtn').textContent = 'Entrar';
   document.getElementById('loginBtn').disabled = false;
 }
 
+// ─── ALUNO ───
 function irPara(tela) {
   ['nav0','nav1','nav2'].forEach(id => document.getElementById(id).classList.remove('active'));
   const idx = { inicio: 0, grade: 1, presenca: 2 }[tela];
@@ -284,10 +326,12 @@ function irPara(tela) {
 
 function renderInicio() {
   const c = document.getElementById('appContent');
-  const aulasFaixa = alunoAtual.aulasNaFaixa || 0;
-  const aulasNec = alunoAtual.aulasNecessarias || 0;
+  const aulasFaixa = usuarioAtual.aulasNaFaixa || 0;
+  const aulasNec = usuarioAtual.aulasNecessarias || 0;
   const faltam = Math.max(0, aulasNec - aulasFaixa);
   const pct = aulasNec > 0 ? Math.min(100, Math.round((aulasFaixa / aulasNec) * 100)) : 0;
+  const hora = new Date().getHours();
+  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
 
   c.innerHTML = `
     <div class="card fade-in">
@@ -305,53 +349,32 @@ function renderInicio() {
         <span>${faltam} restantes</span>
       </div>
       ${faltam === 0
-        ? '<div class="faltam-box done">🎽 Você atingiu o mínimo de aulas! Fale com seu professor.</div>'
+        ? '<div class="faltam-box done">🎽 Você atingiu o mínimo! Fale com seu professor.</div>'
         : `<div class="faltam-box">Faltam <strong>${faltam} aulas</strong> para a próxima faixa</div>`}
     </div>`;
-
-  setTimeout(() => {
-    const fill = document.getElementById('barFill');
-    if (fill) fill.style.width = pct + '%';
-  }, 100);
+  setTimeout(() => { const f = document.getElementById('barFill'); if(f) f.style.width = pct+'%'; }, 100);
 }
 
 async function renderGrade() {
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
-
   try {
     const data = await apiGet({ acao: 'grade' });
     const ordem = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
     const grupos = {};
     ordem.forEach(d => grupos[d] = []);
-
-    (data.aulas || []).forEach(a => {
-      if (a.dia && grupos[a.dia] !== undefined) grupos[a.dia].push(a);
-    });
-
+    (data.aulas || []).forEach(a => { if(a.dia && grupos[a.dia] !== undefined) grupos[a.dia].push(a); });
     const dias = ordem.filter(d => grupos[d].length > 0);
     const rows = dias.map(dia => {
-      const pills = grupos[dia]
-        .sort((a, b) => (a.horario || '').localeCompare(b.horario || ''))
-        .map(a => {
-          const meta = [a.nivel, a.turma, a.professor].filter(Boolean).join(' · ');
-          return `
-            <div class="pill">
-              <span class="pill-time">${a.horario || ''}</span>
-              <span class="pill-name">${a.modalidade || '—'}</span>
-              ${meta ? `<span class="pill-meta">${meta}</span>` : ''}
-            </div>`;
-        }).join('');
-      return `
-        <div class="day-row">
-          <span class="day-name">${dia.substring(0,3)}</span>
-          <div class="day-pills">${pills}</div>
-        </div>`;
+      const pills = grupos[dia].sort((a,b) => (a.horario||'').localeCompare(b.horario||'')).map(a => {
+        const meta = [a.nivel, a.turma, a.professor].filter(Boolean).join(' · ');
+        return `<div class="pill"><span class="pill-time">${a.horario||''}</span><span class="pill-name">${a.modalidade||'—'}</span>${meta?`<span class="pill-meta">${meta}</span>`:''}</div>`;
+      }).join('');
+      return `<div class="day-row"><span class="day-name">${dia.substring(0,3)}</span><div class="day-pills">${pills}</div></div>`;
     }).join('');
-
-    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p>${rows || '<p style="font-size:13px;color:#aaa;">Nenhuma aula ativa encontrada.</p>'}</div>`;
+    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p>${rows||'<p style="font-size:13px;color:#aaa;">Nenhuma aula ativa.</p>'}</div>`;
   } catch(e) {
-    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p><div class="err-box">Erro ao carregar a grade. Tente novamente.</div></div>`;
+    c.innerHTML = `<div class="card fade-in"><p class="card-label">Grade de horários</p><div class="err-box">Erro ao carregar.</div></div>`;
   }
 }
 
@@ -366,9 +389,24 @@ async function renderPresenca() {
   const dataFormatada = agora.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   try {
-    const data = await apiGet({ acao: 'aulaAtual', hora, dia });
+    const [aulaData, presencaData] = await Promise.all([
+      apiGet({ acao: 'aulaAtual', hora, dia }),
+      apiGet({ acao: 'verificarPresenca', alunoId: usuarioAtual.id })
+    ]);
 
-    if (data.sucesso) {
+    if (presencaData.jaRegistrou) {
+      c.innerHTML = `
+        <div class="card-dark card fade-in">
+          <p class="card-label">Confirmar presença</p>
+          <p class="presenca-date">${dataFormatada}</p>
+          <div class="ja-registrado-box">
+            <p>✅ Presença já registrada hoje!</p>
+          </div>
+        </div>`;
+      return;
+    }
+
+    if (aulaData.sucesso) {
       c.innerHTML = `
         <div class="card-dark card fade-in">
           <p class="card-label">Confirmar presença</p>
@@ -377,14 +415,14 @@ async function renderPresenca() {
             <p class="presenca-date">${dataFormatada}</p>
             <div class="aula-atual-box">
               <p class="aula-label">Aula em andamento</p>
-              <p class="aula-nome">${data.modalidade} · ${data.horario}</p>
+              <p class="aula-nome">${aulaData.modalidade} · ${aulaData.horario}</p>
             </div>
-            <button class="presenca-btn" id="presencaBtn" onclick="confirmarPresenca('${data.id}', false)">Confirmar presença</button>
+            <button class="presenca-btn" id="presencaBtn" onclick="confirmarPresenca('${aulaData.id}', false)">Confirmar presença</button>
           </div>
           <div class="presenca-success" id="presencaSuccess">
             <div class="success-ring">✓</div>
             <p>Presença confirmada!</p>
-            <p class="sub">Sua aula foi registrada com sucesso.</p>
+            <p class="sub">Sua aula foi registrada.</p>
           </div>
         </div>`;
     } else {
@@ -395,7 +433,7 @@ async function renderPresenca() {
           <div id="presencaForm">
             <p class="presenca-date">${dataFormatada}</p>
             <div class="bloqueado-box">
-              <p><strong>Nenhuma aula em andamento</strong>A confirmação de presença só está disponível durante o horário das aulas, com 30 min de antecedência.</p>
+              <p><strong>Nenhuma aula em andamento</strong>A confirmação está disponível 30 min antes e até 60 min após o início da aula.</p>
             </div>
             <button class="presenca-btn" disabled>Confirmar presença</button>
             <button class="correcao-btn" onclick="solicitarCorrecao()">Solicitar correção ao professor</button>
@@ -403,21 +441,20 @@ async function renderPresenca() {
           <div class="presenca-success" id="presencaSuccess">
             <div class="success-ring">⏳</div>
             <p>Solicitação enviada!</p>
-            <p class="sub">O professor irá revisar e aprovar sua presença.</p>
+            <p class="sub">O professor irá revisar sua presença.</p>
           </div>
         </div>`;
     }
   } catch(e) {
-    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Confirmar presença</p><div class="err-box">Erro ao verificar aulas. Tente novamente.</div></div>`;
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Confirmar presença</p><div class="err-box">Erro ao verificar. Tente novamente.</div></div>`;
   }
 }
 
 async function confirmarPresenca(aulaId, pendente) {
   const btn = document.getElementById('presencaBtn');
   if (btn) { btn.textContent = 'Registrando...'; btn.disabled = true; }
-
   try {
-    const data = await apiPost({ acao: 'presenca', alunoId: alunoAtual.id, alunoNome: alunoAtual.nome, aulaId, pendente });
+    const data = await apiPost({ acao: 'presenca', alunoId: usuarioAtual.id, alunoNome: usuarioAtual.nome, aulaId, pendente });
     if (data.sucesso) {
       document.getElementById('presencaForm').style.display = 'none';
       document.getElementById('presencaSuccess').style.display = 'block';
@@ -433,9 +470,156 @@ async function solicitarCorrecao() {
   await confirmarPresenca(null, true);
 }
 
-document.getElementById('codigoInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') fazerLogin();
-});
+// ─── PROFESSOR ───
+function irParaProf(tela) {
+  ['pnav0','pnav1','pnav2'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const idx = { qr: 0, chamada: 1, grade: 2 }[tela];
+  document.getElementById('pnav' + idx).classList.add('active');
+  if (tela === 'qr') renderQR();
+  else if (tela === 'chamada') renderChamada();
+  else if (tela === 'grade') renderGradeProf();
+}
+
+async function renderQR() {
+  const c = document.getElementById('profContent');
+  c.innerHTML = `
+    <div class="card-dark card fade-in">
+      <p class="card-label">QR Code da aula</p>
+      <p style="font-size:13px;color:#666;margin-bottom:1rem;">Gere um código para os alunos confirmarem presença. O código expira em 90 minutos.</p>
+      <div class="qr-container" id="qrContainer">
+        <button class="qr-gerar-btn" onclick="gerarQR()">Gerar QR Code</button>
+      </div>
+    </div>`;
+}
+
+async function gerarQR() {
+  const c = document.getElementById('qrContainer');
+  c.innerHTML = `<div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div>`;
+
+  try {
+    const data = await apiPost({ acao: 'gerarQR', professorId: usuarioAtual.id, aulaId: null });
+    if (!data.sucesso) { c.innerHTML = `<div class="err-box">Erro ao gerar QR Code.</div>`; return; }
+
+    const expira = new Date(data.expira);
+    c.innerHTML = `
+      <div id="qrCodeDiv" class="qr-code"></div>
+      <p class="qr-codigo">${data.codigo}</p>
+      <p class="qr-expira">Expira às ${expira.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</p>
+      <p class="qr-timer" id="qrTimer"></p>
+      <button class="qr-gerar-btn" onclick="gerarQR()" style="margin-top:1rem;">Gerar novo código</button>`;
+
+    new QRCode(document.getElementById('qrCodeDiv'), {
+      text: data.codigo,
+      width: 180,
+      height: 180,
+      colorDark: '#181818',
+      colorLight: '#ffffff'
+    });
+
+    if (qrTimer) clearInterval(qrTimer);
+    qrTimer = setInterval(() => {
+      const resto = Math.max(0, Math.floor((expira - new Date()) / 1000));
+      const min = Math.floor(resto / 60).toString().padStart(2,'0');
+      const seg = (resto % 60).toString().padStart(2,'0');
+      const el = document.getElementById('qrTimer');
+      if (el) el.textContent = `${min}:${seg}`;
+      if (resto === 0) clearInterval(qrTimer);
+    }, 1000);
+  } catch(e) {
+    c.innerHTML = `<div class="err-box">Erro de conexão.</div>`;
+  }
+}
+
+async function renderChamada() {
+  const c = document.getElementById('profContent');
+  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Chamada — Turmas Infantis</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+
+  try {
+    const data = await apiGet({ acao: 'listarAlunos' });
+    const alunos = (data.alunos || []).sort((a,b) => a.nome.localeCompare(b.nome));
+    let presentes = new Set();
+
+    const renderLista = () => {
+      c.innerHTML = `
+        <div class="card-dark card fade-in">
+          <p class="card-label">Chamada — Turmas Infantis</p>
+          <p style="font-size:12px;color:#555;margin-bottom:12px;">Toque no nome para marcar presença</p>
+          <div class="chamada-list">
+            ${alunos.map(a => `
+              <div class="chamada-item ${presentes.has(a.id) ? 'presente' : ''}" onclick="togglePresenca('${a.id}')" id="item_${a.id}">
+                <div>
+                  <p class="chamada-item-nome">${a.nome}</p>
+                  <p class="chamada-item-faixa">Faixa ${a.faixa || '—'}</p>
+                </div>
+                <div class="chamada-check">${presentes.has(a.id) ? '✓' : ''}</div>
+              </div>`).join('')}
+          </div>
+          <p style="font-size:12px;color:#555;margin-bottom:10px;">${presentes.size} de ${alunos.length} presentes</p>
+          <button class="chamada-confirmar-btn" onclick="confirmarChamada()" ${presentes.size === 0 ? 'disabled' : ''}>
+            Confirmar chamada (${presentes.size})
+          </button>
+        </div>`;
+
+      alunos.forEach(a => {
+        document.getElementById(`item_${a.id}`).onclick = () => {
+          if (presentes.has(a.id)) presentes.delete(a.id);
+          else presentes.add(a.id);
+          renderLista();
+        };
+      });
+
+      document.querySelector('.chamada-confirmar-btn').onclick = () => confirmarChamada([...presentes]);
+    };
+
+    renderLista();
+  } catch(e) {
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Chamada</p><div class="err-box">Erro ao carregar alunos.</div></div>`;
+  }
+}
+
+async function confirmarChamada(alunoIds) {
+  const btn = document.querySelector('.chamada-confirmar-btn');
+  if (btn) { btn.textContent = 'Registrando...'; btn.disabled = true; }
+  try {
+    const data = await apiPost({ acao: 'chamadaInfantil', alunoIds, professorNome: usuarioAtual.nome, aulaId: null });
+    if (data.sucesso) {
+      document.getElementById('profContent').innerHTML = `
+        <div class="card-dark card fade-in" style="text-align:center;padding:2rem 1.25rem;">
+          <div class="success-ring" style="margin:0 auto 12px;">✓</div>
+          <p style="font-size:14px;color:#aaa;">Chamada registrada!</p>
+          <p style="font-size:12px;color:#555;margin-top:6px;">${alunoIds.length} alunos registrados.</p>
+          <button class="qr-gerar-btn" onclick="irParaProf('chamada')" style="margin-top:1.5rem;">Nova chamada</button>
+        </div>`;
+    }
+  } catch(e) {
+    if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+  }
+}
+
+async function renderGradeProf() {
+  const c = document.getElementById('profContent');
+  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Grade de horários</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+  try {
+    const data = await apiGet({ acao: 'grade' });
+    const ordem = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+    const grupos = {};
+    ordem.forEach(d => grupos[d] = []);
+    (data.aulas || []).forEach(a => { if(a.dia && grupos[a.dia] !== undefined) grupos[a.dia].push(a); });
+    const dias = ordem.filter(d => grupos[d].length > 0);
+    const rows = dias.map(dia => {
+      const pills = grupos[dia].sort((a,b) => (a.horario||'').localeCompare(b.horario||'')).map(a => {
+        const meta = [a.nivel, a.turma, a.professor].filter(Boolean).join(' · ');
+        return `<div class="pill" style="background:#333;"><span class="pill-time" style="color:#888;">${a.horario||''}</span><span class="pill-name" style="color:#fff;">${a.modalidade||'—'}</span>${meta?`<span class="pill-meta">${meta}</span>`:''}</div>`;
+      }).join('');
+      return `<div class="day-row" style="border-color:#333;"><span class="day-name">${dia.substring(0,3)}</span><div class="day-pills">${pills}</div></div>`;
+    }).join('');
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Grade de horários</p>${rows}</div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Grade de horários</p><div class="err-box">Erro ao carregar.</div></div>`;
+  }
+}
+
+document.getElementById('codigoInput').addEventListener('keydown', e => { if(e.key === 'Enter') fazerLogin(); });
 </script>
 </body>
 </html>
