@@ -155,6 +155,19 @@
 
   .info-box { background: var(--black2); border: 1px solid var(--gray); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--mid); margin-bottom: 12px; }
   .info-box strong { color: var(--pure); display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* SELETOR DE AULA */
+  .aula-select { width: 100%; background: var(--black); border: 1px solid var(--gray); border-radius: 10px; padding: 13px 14px; color: var(--pure); font-family: var(--font-sans); font-size: 14px; outline: none; margin-bottom: 1rem; -webkit-appearance: none; appearance: none; }
+  .aula-select:focus { border-color: var(--light); }
+
+  /* CÓDIGO GRANDE (professor) */
+  .codigo-display { font-family: var(--font-serif); font-size: 72px; color: var(--pure); letter-spacing: 18px; text-align: center; margin: 1rem 0 0.25rem; padding-left: 18px; }
+
+  /* PIN INPUT (aluno) */
+  .pin-wrap { display: flex; gap: 10px; justify-content: center; margin: 1.5rem 0; }
+  .pin-digit { width: 60px; height: 68px; background: var(--black2); border: 1.5px solid var(--gray); border-radius: 12px; color: var(--pure); font-family: var(--font-serif); font-size: 36px; text-align: center; outline: none; transition: border-color 0.2s; caret-color: transparent; }
+  .pin-digit:focus { border-color: var(--light); }
+  .pin-digit.filled { border-color: #555; }
 </style>
 </head>
 <body>
@@ -219,7 +232,7 @@
   <nav class="prof-nav">
     <button class="prof-nav-btn active" id="pnav0" onclick="irParaProf('qr')">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="12" width="2" height="2" fill="currentColor"/><rect x="15" y="12" width="2" height="2" fill="currentColor"/><rect x="12" y="15" width="2" height="2" fill="currentColor"/><rect x="15" y="15" width="2" height="2" fill="currentColor"/></svg>
-      <span>QR Code</span>
+      <span>Código</span>
     </button>
     <button class="prof-nav-btn" id="pnav1" onclick="irParaProf('chamada')">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h12M4 14h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -380,19 +393,10 @@ async function renderGrade() {
 
 async function renderPresenca() {
   const c = document.getElementById('appContent');
-  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Confirmar presença</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
-
-  const agora = new Date();
-  const hora = agora.getHours().toString().padStart(2,'0') + ':' + agora.getMinutes().toString().padStart(2,'0');
-  const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const dia = dias[agora.getDay()];
-  const dataFormatada = agora.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const dataFormatada = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   try {
-    const [aulaData, presencaData] = await Promise.all([
-      apiGet({ acao: 'aulaAtual', hora, dia }),
-      apiGet({ acao: 'verificarPresenca', alunoId: usuarioAtual.id })
-    ]);
+    const presencaData = await apiGet({ acao: 'verificarPresenca', alunoId: usuarioAtual.id });
 
     if (presencaData.jaRegistrou) {
       c.innerHTML = `
@@ -405,70 +409,91 @@ async function renderPresenca() {
         </div>`;
       return;
     }
+  } catch(e) { /* segue para mostrar o form */ }
 
-    if (aulaData.sucesso) {
-      c.innerHTML = `
-        <div class="card-dark card fade-in">
-          <p class="card-label">Confirmar presença</p>
-          <p class="presenca-desc">Registre sua presença na aula de hoje.</p>
-          <div id="presencaForm">
-            <p class="presenca-date">${dataFormatada}</p>
-            <div class="aula-atual-box">
-              <p class="aula-label">Aula em andamento</p>
-              <p class="aula-nome">${aulaData.modalidade} · ${aulaData.horario}</p>
-            </div>
-            <button class="presenca-btn" id="presencaBtn" onclick="confirmarPresenca('${aulaData.id}', false)">Confirmar presença</button>
-          </div>
-          <div class="presenca-success" id="presencaSuccess">
-            <div class="success-ring">✓</div>
-            <p>Presença confirmada!</p>
-            <p class="sub">Sua aula foi registrada.</p>
-          </div>
-        </div>`;
-    } else {
-      c.innerHTML = `
-        <div class="card-dark card fade-in">
-          <p class="card-label">Confirmar presença</p>
-          <p class="presenca-desc">Registre sua presença na aula de hoje.</p>
-          <div id="presencaForm">
-            <p class="presenca-date">${dataFormatada}</p>
-            <div class="bloqueado-box">
-              <p><strong>Nenhuma aula em andamento</strong>A confirmação está disponível 30 min antes e até 60 min após o início da aula.</p>
-            </div>
-            <button class="presenca-btn" disabled>Confirmar presença</button>
-            <button class="correcao-btn" onclick="solicitarCorrecao()">Solicitar correção ao professor</button>
-          </div>
-          <div class="presenca-success" id="presencaSuccess">
-            <div class="success-ring">⏳</div>
-            <p>Solicitação enviada!</p>
-            <p class="sub">O professor irá revisar sua presença.</p>
-          </div>
-        </div>`;
-    }
-  } catch(e) {
-    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Confirmar presença</p><div class="err-box">Erro ao verificar. Tente novamente.</div></div>`;
-  }
+  const dataFormatada2 = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('appContent').innerHTML = `
+    <div class="card-dark card fade-in">
+      <p class="card-label">Confirmar presença</p>
+      <p class="presenca-desc">Digite o código de 4 dígitos fornecido pelo professor.</p>
+      <div id="presencaForm">
+        <p class="presenca-date">${dataFormatada2}</p>
+        <div class="pin-wrap">
+          <input class="pin-digit" type="tel" maxlength="1" id="pin0" inputmode="numeric" pattern="[0-9]">
+          <input class="pin-digit" type="tel" maxlength="1" id="pin1" inputmode="numeric" pattern="[0-9]">
+          <input class="pin-digit" type="tel" maxlength="1" id="pin2" inputmode="numeric" pattern="[0-9]">
+          <input class="pin-digit" type="tel" maxlength="1" id="pin3" inputmode="numeric" pattern="[0-9]">
+        </div>
+        <p class="login-error" id="pinError" style="text-align:center;margin-bottom:10px;"></p>
+        <button class="presenca-btn" id="presencaBtn" onclick="confirmarPresenca()">Confirmar presença</button>
+      </div>
+      <div class="presenca-success" id="presencaSuccess">
+        <div class="success-ring">✓</div>
+        <p>Presença confirmada!</p>
+        <p class="sub">Sua aula foi registrada.</p>
+      </div>
+    </div>`;
+
+  configurarPinInputs();
 }
 
-async function confirmarPresenca(aulaId, pendente) {
+function configurarPinInputs() {
+  const inputs = [0,1,2,3].map(i => document.getElementById('pin'+i));
+  inputs.forEach((el, i) => {
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g,'').slice(-1);
+      if (el.value) { el.classList.add('filled'); if (i < 3) inputs[i+1].focus(); }
+      else el.classList.remove('filled');
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !el.value && i > 0) inputs[i-1].focus();
+      if (e.key === 'Enter') confirmarPresenca();
+    });
+    el.addEventListener('paste', e => {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,4);
+      txt.split('').forEach((ch, j) => { if (inputs[j]) { inputs[j].value = ch; inputs[j].classList.add('filled'); } });
+      if (inputs[Math.min(txt.length, 3)]) inputs[Math.min(txt.length, 3)].focus();
+    });
+  });
+  inputs[0].focus();
+}
+
+async function confirmarPresenca() {
+  const inputs = [0,1,2,3].map(i => document.getElementById('pin'+i));
+  const codigo = inputs.map(el => el.value).join('');
+  const erro = document.getElementById('pinError');
+  erro.style.display = 'none';
+
+  if (codigo.length < 4) {
+    erro.textContent = 'Digite os 4 dígitos do código.';
+    erro.style.display = 'block';
+    return;
+  }
+
   const btn = document.getElementById('presencaBtn');
-  if (btn) { btn.textContent = 'Registrando...'; btn.disabled = true; }
+  btn.textContent = 'Verificando...';
+  btn.disabled = true;
+
   try {
-    const data = await apiPost({ acao: 'presenca', alunoId: usuarioAtual.id, alunoNome: usuarioAtual.nome, aulaId, pendente });
+    const data = await apiPost({ acao: 'validarCodigo', codigo, alunoId: usuarioAtual.id, alunoNome: usuarioAtual.nome });
     if (data.sucesso) {
       document.getElementById('presencaForm').style.display = 'none';
       document.getElementById('presencaSuccess').style.display = 'block';
     } else {
-      if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+      erro.textContent = data.erro || 'Código inválido ou expirado.';
+      erro.style.display = 'block';
+      inputs.forEach(el => { el.value = ''; el.classList.remove('filled'); });
+      inputs[0].focus();
+      btn.textContent = 'Confirmar presença';
+      btn.disabled = false;
     }
   } catch(e) {
-    if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
-  }
-}
-
-async function solicitarCorrecao() {
-  await confirmarPresenca(null, true);
-}
+    erro.textContent = 'Erro de conexão. Tente novamente.';
+    erro.style.display = 'block';
+    btn.textContent = 'Confirmar presença';
+    btn.disabled = false;
+  }}
 
 // ─── PROFESSOR ───
 function irParaProf(tela) {
@@ -482,48 +507,70 @@ function irParaProf(tela) {
 
 async function renderQR() {
   const c = document.getElementById('profContent');
-  c.innerHTML = `
-    <div class="card-dark card fade-in">
-      <p class="card-label">QR Code da aula</p>
-      <p style="font-size:13px;color:#666;margin-bottom:1rem;">Gere um código para os alunos confirmarem presença. O código expira em 90 minutos.</p>
-      <div class="qr-container" id="qrContainer">
-        <button class="qr-gerar-btn" onclick="gerarQR()">Gerar QR Code</button>
-      </div>
-    </div>`;
+  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Código de presença</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+
+  try {
+    const data = await apiGet({ acao: 'grade' });
+    const aulas = (data.aulas || []).sort((a, b) => (a.horario || '').localeCompare(b.horario || ''));
+    const options = aulas.map(a => {
+      const label = [a.modalidade, a.horario, a.dia].filter(Boolean).join(' · ');
+      return `<option value="${a.id}">${label}</option>`;
+    }).join('');
+
+    c.innerHTML = `
+      <div class="card-dark card fade-in">
+        <p class="card-label">Código de presença</p>
+        <p style="font-size:13px;color:#666;margin-bottom:1rem;">Selecione a aula e gere um código de 4 dígitos para os alunos confirmarem presença.</p>
+        <div id="qrContainer">
+          <select class="aula-select" id="aulaSelect">
+            <option value="">Selecionar aula...</option>
+            ${options}
+          </select>
+          <button class="qr-gerar-btn" onclick="gerarQR()">Gerar código</button>
+        </div>
+      </div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Código de presença</p><div class="err-box">Erro ao carregar aulas.</div></div>`;
+  }
 }
 
 async function gerarQR() {
+  const select = document.getElementById('aulaSelect');
+  const aulaId = select ? select.value : null;
+  if (!aulaId) {
+    select && (select.style.borderColor = '#e05555');
+    setTimeout(() => { if (select) select.style.borderColor = ''; }, 1500);
+    return;
+  }
+
   const c = document.getElementById('qrContainer');
   c.innerHTML = `<div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div>`;
 
   try {
-    const data = await apiPost({ acao: 'gerarQR', professorId: usuarioAtual.id, aulaId: null });
-    if (!data.sucesso) { c.innerHTML = `<div class="err-box">Erro ao gerar QR Code.</div>`; return; }
+    const data = await apiPost({ acao: 'gerarCodigo', professorId: usuarioAtual.id, aulaId });
+    if (!data.sucesso) { c.innerHTML = `<div class="err-box">Erro ao gerar código.</div>`; return; }
 
     const expira = new Date(data.expira);
-    c.innerHTML = `
-      <div id="qrCodeDiv" class="qr-code"></div>
-      <p class="qr-codigo">${data.codigo}</p>
-      <p class="qr-expira">Expira às ${expira.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</p>
-      <p class="qr-timer" id="qrTimer"></p>
-      <button class="qr-gerar-btn" onclick="gerarQR()" style="margin-top:1rem;">Gerar novo código</button>`;
+    const aulaLabel = [data.modalidade, data.horario].filter(Boolean).join(' · ') || 'Aula';
 
-    new QRCode(document.getElementById('qrCodeDiv'), {
-      text: data.codigo,
-      width: 180,
-      height: 180,
-      colorDark: '#181818',
-      colorLight: '#ffffff'
-    });
+    c.innerHTML = `
+      <div class="aula-atual-box" style="margin-bottom:1rem;">
+        <p class="aula-label">Aula selecionada</p>
+        <p class="aula-nome">${aulaLabel}</p>
+      </div>
+      <p class="codigo-display" id="codigoDisplay">${data.codigo}</p>
+      <p class="qr-expira" style="text-align:center;">Expira às ${expira.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</p>
+      <p class="qr-timer" id="qrTimer" style="text-align:center;margin-top:6px;"></p>
+      <button class="qr-gerar-btn" onclick="renderQR()" style="margin-top:1.5rem;">Gerar novo código</button>`;
 
     if (qrTimer) clearInterval(qrTimer);
     qrTimer = setInterval(() => {
       const resto = Math.max(0, Math.floor((expira - new Date()) / 1000));
-      const min = Math.floor(resto / 60).toString().padStart(2,'0');
-      const seg = (resto % 60).toString().padStart(2,'0');
+      const min = Math.floor(resto / 60).toString().padStart(2, '0');
+      const seg = (resto % 60).toString().padStart(2, '0');
       const el = document.getElementById('qrTimer');
       if (el) el.textContent = `${min}:${seg}`;
-      if (resto === 0) clearInterval(qrTimer);
+      if (resto === 0) { clearInterval(qrTimer); const d = document.getElementById('codigoDisplay'); if (d) d.style.opacity = '0.3'; }
     }, 1000);
   } catch(e) {
     c.innerHTML = `<div class="err-box">Erro de conexão.</div>`;
