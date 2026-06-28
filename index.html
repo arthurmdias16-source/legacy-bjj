@@ -168,6 +168,30 @@
   .pin-digit { width: 60px; height: 68px; background: var(--black2); border: 1.5px solid var(--gray); border-radius: 12px; color: var(--pure); font-family: var(--font-serif); font-size: 36px; text-align: center; outline: none; transition: border-color 0.2s; caret-color: transparent; }
   .pin-digit:focus { border-color: var(--light); }
   .pin-digit.filled { border-color: #555; }
+
+  /* HISTÓRICO */
+  .hist-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #f0f0ee; }
+  .hist-item:last-child { border-bottom: none; }
+  .hist-data { font-size: 12px; color: var(--mid); }
+  .hist-aula { font-size: 13px; color: var(--black); font-weight: 500; }
+  .hist-badge { font-size: 10px; letter-spacing: 1px; background: #f5f5f3; border-radius: 6px; padding: 3px 8px; color: #555; white-space: nowrap; }
+
+  /* PRÓXIMAS AULAS */
+  .proximas-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #f0f0ee; }
+  .proximas-item:last-child { border-bottom: none; }
+  .proximas-hora { font-size: 12px; color: var(--mid); font-weight: 500; width: 38px; flex-shrink: 0; }
+  .proximas-nome { font-size: 13px; color: var(--black); font-weight: 500; }
+  .proximas-meta { font-size: 11px; color: var(--mid); }
+  .proximas-hoje { display: inline-block; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; background: var(--black); color: var(--white); border-radius: 4px; padding: 2px 6px; margin-bottom: 8px; }
+
+  /* CONFIRMADOS (professor) */
+  .confirmados-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  .confirmado-item { display: flex; align-items: center; gap: 10px; background: #1a2e1a; border: 1px solid #4caf50; border-radius: 8px; padding: 8px 12px; }
+  .confirmado-nome { font-size: 13px; color: var(--pure); }
+  .confirmado-hora { font-size: 11px; color: var(--mid); margin-left: auto; }
+  .confirmados-header { display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; margin-bottom: 4px; }
+  .confirmados-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); }
+  .confirmados-refresh { background: none; border: 1px solid var(--gray); border-radius: 6px; color: var(--mid); font-size: 11px; font-family: var(--font-sans); padding: 4px 10px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -217,6 +241,10 @@
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       <span>Presença</span>
     </button>
+    <button class="nav-btn" id="nav3" onclick="irPara('historico')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M10 6v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span>Histórico</span>
+    </button>
   </nav>
 </div>
 
@@ -245,11 +273,11 @@
   </nav>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPjc2ciAcwgvhtMwePd_vdeazg_MBVQPQmaE48iPBSUrowpqdz_m5Twwi8jgdCnEw5/exec";
 let usuarioAtual = null;
 let qrTimer = null;
+let confirmadosTimer = null;
 
 async function apiGet(params) {
   const url = API_URL + '?' + new URLSearchParams(params);
@@ -286,6 +314,7 @@ async function fazerLogin() {
       return;
     }
     usuarioAtual = data;
+    localStorage.setItem('legacyjj_usuario', JSON.stringify(data));
     if (data.tipo === 'professor') mostrarAppProf();
     else mostrarAppAluno();
   } catch(e) {
@@ -319,7 +348,9 @@ function mostrarAppProf() {
 
 function logout() {
   usuarioAtual = null;
+  localStorage.removeItem('legacyjj_usuario');
   if (qrTimer) clearInterval(qrTimer);
+  if (confirmadosTimer) clearInterval(confirmadosTimer);
   ['appScreen','profScreen'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('loginScreen').classList.add('active');
   document.getElementById('codigoInput').value = '';
@@ -329,22 +360,21 @@ function logout() {
 
 // ─── ALUNO ───
 function irPara(tela) {
-  ['nav0','nav1','nav2'].forEach(id => document.getElementById(id).classList.remove('active'));
-  const idx = { inicio: 0, grade: 1, presenca: 2 }[tela];
+  ['nav0','nav1','nav2','nav3'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const idx = { inicio: 0, grade: 1, presenca: 2, historico: 3 }[tela];
   document.getElementById('nav' + idx).classList.add('active');
   if (tela === 'inicio') renderInicio();
   else if (tela === 'grade') renderGrade();
   else if (tela === 'presenca') renderPresenca();
+  else if (tela === 'historico') renderHistorico();
 }
 
-function renderInicio() {
+async function renderInicio() {
   const c = document.getElementById('appContent');
   const aulasFaixa = usuarioAtual.aulasNaFaixa || 0;
   const aulasNec = usuarioAtual.aulasNecessarias || 0;
   const faltam = Math.max(0, aulasNec - aulasFaixa);
   const pct = aulasNec > 0 ? Math.min(100, Math.round((aulasFaixa / aulasNec) * 100)) : 0;
-  const hora = new Date().getHours();
-  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
 
   c.innerHTML = `
     <div class="card fade-in">
@@ -364,8 +394,67 @@ function renderInicio() {
       ${faltam === 0
         ? '<div class="faltam-box done">🎽 Você atingiu o mínimo! Fale com seu professor.</div>'
         : `<div class="faltam-box">Faltam <strong>${faltam} aulas</strong> para a próxima faixa</div>`}
+    </div>
+    <div class="card fade-in" id="proximasCard">
+      <p class="card-label">Próximas aulas</p>
+      <div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div>
     </div>`;
+
   setTimeout(() => { const f = document.getElementById('barFill'); if(f) f.style.width = pct+'%'; }, 100);
+
+  // Carrega próximas aulas
+  try {
+    const data = await apiGet({ acao: 'grade' });
+    const agora = new Date();
+    const horaMin = agora.getHours() * 60 + agora.getMinutes();
+    const diasSemana = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+    const diaHoje = diasSemana[agora.getDay()];
+    const ordemDias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+    const idxHoje = ordemDias.indexOf(diaHoje);
+
+    const aulas = data.aulas || [];
+
+    // Aulas de hoje que ainda não começaram (ou começaram há menos de 60min)
+    const aulasHoje = aulas.filter(a => {
+      if (a.dia !== diaHoje) return false;
+      const h = (a.horario || '').replace('h',':').split(':');
+      const minAula = parseInt(h[0]||0)*60 + parseInt(h[1]||0);
+      return minAula + 60 >= horaMin;
+    }).sort((a,b) => (a.horario||'').localeCompare(b.horario||''));
+
+    // Se não há mais aulas hoje, pega o próximo dia com aulas
+    let proximasLabel = 'Hoje';
+    let proximasList = aulasHoje;
+    if (aulasHoje.length === 0) {
+      for (let i = 1; i <= 7; i++) {
+        const proximoDia = ordemDias[(idxHoje + i) % 7];
+        const aulasDia = aulas.filter(a => a.dia === proximoDia);
+        if (aulasDia.length > 0) {
+          proximasList = aulasDia.sort((a,b) => (a.horario||'').localeCompare(b.horario||''));
+          proximasLabel = proximoDia;
+          break;
+        }
+      }
+    }
+
+    const card = document.getElementById('proximasCard');
+    if (!card) return;
+    if (proximasList.length === 0) {
+      card.innerHTML = `<p class="card-label">Próximas aulas</p><p style="font-size:13px;color:#aaa;">Nenhuma aula encontrada.</p>`;
+      return;
+    }
+    const rows = proximasList.map(a => {
+      const meta = [a.nivel, a.turma].filter(Boolean).join(' · ');
+      return `<div class="proximas-item">
+        <span class="proximas-hora">${a.horario||'—'}</span>
+        <div><p class="proximas-nome">${a.modalidade||'—'}</p>${meta?`<p class="proximas-meta">${meta}</p>`:''}</div>
+      </div>`;
+    }).join('');
+    card.innerHTML = `<p class="card-label">Próximas aulas</p><span class="proximas-hoje">${proximasLabel}</span>${rows}`;
+  } catch(e) {
+    const card = document.getElementById('proximasCard');
+    if (card) card.innerHTML = `<p class="card-label">Próximas aulas</p><div class="err-box">Erro ao carregar.</div>`;
+  }
 }
 
 async function renderGrade() {
@@ -411,13 +500,12 @@ async function renderPresenca() {
     }
   } catch(e) { /* segue para mostrar o form */ }
 
-  const dataFormatada2 = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
   document.getElementById('appContent').innerHTML = `
     <div class="card-dark card fade-in">
       <p class="card-label">Confirmar presença</p>
       <p class="presenca-desc">Digite o código de 4 dígitos fornecido pelo professor.</p>
       <div id="presencaForm">
-        <p class="presenca-date">${dataFormatada2}</p>
+        <p class="presenca-date">${dataFormatada}</p>
         <div class="pin-wrap">
           <input class="pin-digit" type="tel" maxlength="1" id="pin0" inputmode="numeric" pattern="[0-9]">
           <input class="pin-digit" type="tel" maxlength="1" id="pin1" inputmode="numeric" pattern="[0-9]">
@@ -495,6 +583,35 @@ async function confirmarPresenca() {
     btn.disabled = false;
   }}
 
+async function renderHistorico() {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="card fade-in"><p class="card-label">Histórico de presenças</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+  try {
+    const data = await apiGet({ acao: 'historicoPresencas', alunoId: usuarioAtual.id });
+    const registros = data.registros || [];
+    if (registros.length === 0) {
+      c.innerHTML = `<div class="card fade-in"><p class="card-label">Histórico de presenças</p><p style="font-size:13px;color:#aaa;margin-top:4px;">Nenhuma presença registrada ainda.</p></div>`;
+      return;
+    }
+    const rows = registros.map(r => `
+      <div class="hist-item">
+        <div>
+          <p class="hist-aula">${r.modalidade || 'Aula'}</p>
+          <p class="hist-data">${r.data || '—'}</p>
+        </div>
+        <span class="hist-badge">${r.horario || ''}</span>
+      </div>`).join('');
+    c.innerHTML = `
+      <div class="card fade-in">
+        <p class="card-label">Histórico de presenças</p>
+        <p style="font-size:12px;color:#aaa;margin-bottom:12px;">${registros.length} aula${registros.length !== 1 ? 's' : ''} registrada${registros.length !== 1 ? 's' : ''}</p>
+        ${rows}
+      </div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card fade-in"><p class="card-label">Histórico de presenças</p><div class="err-box">Erro ao carregar histórico.</div></div>`;
+  }
+}
+
 // ─── PROFESSOR ───
 function irParaProf(tela) {
   ['pnav0','pnav1','pnav2'].forEach(id => document.getElementById(id).classList.remove('active'));
@@ -561,6 +678,11 @@ async function gerarQR() {
       <p class="codigo-display" id="codigoDisplay">${data.codigo}</p>
       <p class="qr-expira" style="text-align:center;">Expira às ${expira.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</p>
       <p class="qr-timer" id="qrTimer" style="text-align:center;margin-top:6px;"></p>
+      <div class="confirmados-header">
+        <span class="confirmados-label">Confirmados (<span id="confirmadosCount">0</span>)</span>
+        <button class="confirmados-refresh" onclick="atualizarConfirmados('${aulaId}')">Atualizar</button>
+      </div>
+      <div class="confirmados-list" id="confirmadosList"><p style="font-size:12px;color:#555;">Aguardando confirmações...</p></div>
       <button class="qr-gerar-btn" onclick="renderQR()" style="margin-top:1.5rem;">Gerar novo código</button>`;
 
     if (qrTimer) clearInterval(qrTimer);
@@ -570,11 +692,37 @@ async function gerarQR() {
       const seg = (resto % 60).toString().padStart(2, '0');
       const el = document.getElementById('qrTimer');
       if (el) el.textContent = `${min}:${seg}`;
-      if (resto === 0) { clearInterval(qrTimer); const d = document.getElementById('codigoDisplay'); if (d) d.style.opacity = '0.3'; }
+      if (resto === 0) { clearInterval(qrTimer); clearInterval(confirmadosTimer); const d = document.getElementById('codigoDisplay'); if (d) d.style.opacity = '0.3'; }
     }, 1000);
+
+    // Atualiza lista de confirmados a cada 20 segundos
+    atualizarConfirmados(aulaId);
+    if (confirmadosTimer) clearInterval(confirmadosTimer);
+    confirmadosTimer = setInterval(() => atualizarConfirmados(aulaId), 20000);
   } catch(e) {
     c.innerHTML = `<div class="err-box">Erro de conexão.</div>`;
   }
+}
+
+async function atualizarConfirmados(aulaId) {
+  const lista = document.getElementById('confirmadosList');
+  const count = document.getElementById('confirmadosCount');
+  if (!lista) return;
+  try {
+    const data = await apiGet({ acao: 'presencasHoje', aulaId });
+    const alunos = data.alunos || [];
+    if (count) count.textContent = alunos.length;
+    if (alunos.length === 0) {
+      lista.innerHTML = `<p style="font-size:12px;color:#555;">Aguardando confirmações...</p>`;
+      return;
+    }
+    lista.innerHTML = alunos.map(a => `
+      <div class="confirmado-item">
+        <span style="font-size:14px;">✓</span>
+        <span class="confirmado-nome">${a.nome}</span>
+        <span class="confirmado-hora">${a.hora || ''}</span>
+      </div>`).join('');
+  } catch(e) { /* silencioso, não interrompe o fluxo */ }
 }
 
 async function renderChamada() {
@@ -667,6 +815,17 @@ async function renderGradeProf() {
 }
 
 document.getElementById('codigoInput').addEventListener('keydown', e => { if(e.key === 'Enter') fazerLogin(); });
+
+// Restaura sessão ao carregar a página
+(function restaurarSessao() {
+  try {
+    const salvo = localStorage.getItem('legacyjj_usuario');
+    if (!salvo) return;
+    usuarioAtual = JSON.parse(salvo);
+    if (usuarioAtual.tipo === 'professor') mostrarAppProf();
+    else mostrarAppAluno();
+  } catch(e) { localStorage.removeItem('legacyjj_usuario'); }
+})();
 </script>
 </body>
 </html>
