@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Legacy BJJ">
 <meta name="theme-color" content="#181818">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.svg">
 <title>Legacy BJJ — Belo Horizonte</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -169,6 +171,32 @@
   .pin-digit:focus { border-color: var(--light); }
   .pin-digit.filled { border-color: #555; }
 
+  /* AVISOS */
+  .aviso-card { background: var(--black2); border: 1px solid #444; border-radius: 12px; padding: 14px; margin-bottom: 8px; }
+  .aviso-card:last-child { margin-bottom: 0; }
+  .aviso-titulo { font-size: 14px; color: var(--pure); font-weight: 500; margin-bottom: 4px; }
+  .aviso-texto { font-size: 13px; color: #888; line-height: 1.5; }
+  .aviso-data { font-size: 10px; color: #555; letter-spacing: 1px; margin-top: 8px; text-transform: uppercase; }
+  .aviso-novo { display: inline-block; background: var(--pure); color: var(--black); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; }
+
+  /* GRADUAÇÃO */
+  .grad-form select, .grad-form input { width: 100%; background: var(--black); border: 1px solid var(--gray); border-radius: 10px; padding: 12px 14px; color: var(--pure); font-family: var(--font-sans); font-size: 14px; outline: none; margin-bottom: 10px; -webkit-appearance: none; appearance: none; }
+  .grad-form select:focus, .grad-form input:focus { border-color: var(--light); }
+  .grad-historico-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; }
+  .grad-historico-item:last-child { border-bottom: none; }
+  .grad-faixa-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-right: 10px; }
+  .grad-faixa-nome { font-size: 14px; color: var(--pure); }
+  .grad-faixa-data { font-size: 11px; color: #555; }
+
+  /* GESTÃO / INATIVOS */
+  .inativo-item { display: flex; align-items: center; justify-content: space-between; background: var(--black); border: 1px solid #3a2020; border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; }
+  .inativo-nome { font-size: 14px; color: var(--pure); }
+  .inativo-dias { font-size: 11px; color: #e05555; margin-top: 2px; }
+  .inativo-faixa { font-size: 11px; color: #555; }
+  .secao-titulo { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin: 1.25rem 0 10px; }
+  .aviso-input { width: 100%; background: var(--black); border: 1px solid var(--gray); border-radius: 10px; padding: 12px 14px; color: var(--pure); font-family: var(--font-sans); font-size: 14px; outline: none; margin-bottom: 10px; resize: none; }
+  .aviso-input:focus { border-color: var(--light); }
+
   /* HISTÓRICO */
   .hist-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #f0f0ee; }
   .hist-item:last-child { border-bottom: none; }
@@ -270,6 +298,10 @@
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 2V5M13 2V5M3 8H17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       <span>Grade</span>
     </button>
+    <button class="prof-nav-btn" id="pnav3" onclick="irParaProf('extra')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" id="pnav3icon"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span id="pnav3label">Mais</span>
+    </button>
   </nav>
 </div>
 
@@ -343,6 +375,18 @@ function mostrarAppProf() {
   document.getElementById('profEyebrow').textContent = isGestor ? 'Gestor' : 'Professor';
   document.getElementById('profNome').textContent = usuarioAtual.nome || '—';
   document.getElementById('profBadge').textContent = usuarioAtual.perfil || '—';
+
+  // Configura 4ª aba conforme perfil
+  const label = document.getElementById('pnav3label');
+  const icon = document.getElementById('pnav3icon');
+  if (isGestor) {
+    if (label) label.textContent = 'Gestão';
+    if (icon) icon.innerHTML = '<path d="M10 3a7 7 0 100 14A7 7 0 0010 3zm0 2a5 5 0 110 10A5 5 0 0110 5zm0 2v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>';
+  } else {
+    if (label) label.textContent = 'Graduação';
+    if (icon) icon.innerHTML = '<path d="M10 3l1.8 3.6L16 7.3l-3 2.9.7 4.1L10 12.4l-3.7 1.9.7-4.1-3-2.9 4.2-.7L10 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>';
+  }
+
   irParaProf('qr');
 }
 
@@ -395,12 +439,30 @@ async function renderInicio() {
         ? '<div class="faltam-box done">🎽 Você atingiu o mínimo! Fale com seu professor.</div>'
         : `<div class="faltam-box">Faltam <strong>${faltam} aulas</strong> para a próxima faixa</div>`}
     </div>
+    <div class="card fade-in" id="avisosCard" style="display:none;background:var(--black2);border-color:var(--gray);color:var(--white);"></div>
     <div class="card fade-in" id="proximasCard">
       <p class="card-label">Próximas aulas</p>
       <div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div>
     </div>`;
 
   setTimeout(() => { const f = document.getElementById('barFill'); if(f) f.style.width = pct+'%'; }, 100);
+
+  // Carrega avisos
+  try {
+    const av = await apiGet({ acao: 'avisos' });
+    const avisos = (av.avisos || []).filter(a => a.ativo);
+    const avisosCard = document.getElementById('avisosCard');
+    if (avisosCard && avisos.length > 0) {
+      avisosCard.style.display = 'block';
+      avisosCard.innerHTML = `<p class="card-label">Avisos</p>` + avisos.map(a => `
+        <div class="aviso-card">
+          ${a.novo ? '<span class="aviso-novo">Novo</span>' : ''}
+          <p class="aviso-titulo">${a.titulo}</p>
+          <p class="aviso-texto">${a.texto}</p>
+          <p class="aviso-data">${a.data || ''}</p>
+        </div>`).join('');
+    }
+  } catch(e) { /* silencioso */ }
 
   // Carrega próximas aulas
   try {
@@ -614,12 +676,17 @@ async function renderHistorico() {
 
 // ─── PROFESSOR ───
 function irParaProf(tela) {
-  ['pnav0','pnav1','pnav2'].forEach(id => document.getElementById(id).classList.remove('active'));
-  const idx = { qr: 0, chamada: 1, grade: 2 }[tela];
+  ['pnav0','pnav1','pnav2','pnav3'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const idx = { qr: 0, chamada: 1, grade: 2, extra: 3 }[tela];
   document.getElementById('pnav' + idx).classList.add('active');
   if (tela === 'qr') renderQR();
   else if (tela === 'chamada') renderChamada();
   else if (tela === 'grade') renderGradeProf();
+  else if (tela === 'extra') {
+    const isGestor = usuarioAtual.perfil === '👑 Gestor';
+    if (isGestor) renderGestao();
+    else renderGraduacao();
+  }
 }
 
 async function renderQR() {
@@ -815,6 +882,137 @@ async function renderGradeProf() {
 }
 
 document.getElementById('codigoInput').addEventListener('keydown', e => { if(e.key === 'Enter') fazerLogin(); });
+
+// Registra Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/legacy-bjj/sw.js')
+      .catch(() => {}); // silencioso se falhar (ex: localhost)
+  });
+}
+
+// ─── GESTÃO (Gestor) ───
+async function renderGestao() {
+  const c = document.getElementById('profContent');
+  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Gestão</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+
+  try {
+    const [avisosData, inativosData] = await Promise.all([
+      apiGet({ acao: 'avisos' }),
+      apiGet({ acao: 'alunosInativos', dias: 14 })
+    ]);
+
+    const avisos = avisosData.avisos || [];
+    const inativos = inativosData.alunos || [];
+
+    const avisosHTML = avisos.length === 0
+      ? '<p style="font-size:13px;color:#555;margin-bottom:1rem;">Nenhum aviso ativo.</p>'
+      : avisos.map(a => `<div class="aviso-card"><p class="aviso-titulo">${a.titulo}</p><p class="aviso-texto">${a.texto}</p><p class="aviso-data">${a.data || ''}</p></div>`).join('');
+
+    const inativosHTML = inativos.length === 0
+      ? '<p style="font-size:13px;color:#555;">Nenhum aluno inativo.</p>'
+      : inativos.map(a => `
+          <div class="inativo-item">
+            <div>
+              <p class="inativo-nome">${a.nome}</p>
+              <p class="inativo-faixa">Faixa ${a.faixa || '—'}</p>
+            </div>
+            <p class="inativo-dias">${a.diasSemAula} dias sem aula</p>
+          </div>`).join('');
+
+    c.innerHTML = `
+      <div class="card-dark card fade-in">
+        <p class="card-label">Avisos para alunos</p>
+        ${avisosHTML}
+        <p class="secao-titulo">Novo aviso</p>
+        <input class="aviso-input" type="text" id="avisoTitulo" placeholder="Título do aviso">
+        <textarea class="aviso-input" id="avisoTexto" rows="3" placeholder="Texto do aviso..."></textarea>
+        <button class="qr-gerar-btn" style="margin-top:0;" onclick="criarAviso()">Publicar aviso</button>
+      </div>
+      <div class="card-dark card fade-in">
+        <p class="card-label">Alunos sem aula há +14 dias</p>
+        ${inativosHTML}
+      </div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Gestão</p><div class="err-box">Erro ao carregar.</div></div>`;
+  }
+}
+
+async function criarAviso() {
+  const titulo = document.getElementById('avisoTitulo')?.value.trim();
+  const texto = document.getElementById('avisoTexto')?.value.trim();
+  if (!titulo || !texto) return;
+  const btn = document.querySelector('#profContent .qr-gerar-btn');
+  if (btn) { btn.textContent = 'Publicando...'; btn.disabled = true; }
+  try {
+    const data = await apiPost({ acao: 'criarAviso', titulo, texto, professorId: usuarioAtual.id });
+    if (data.sucesso) renderGestao();
+    else if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+  } catch(e) {
+    if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+  }
+}
+
+// ─── GRADUAÇÃO (Professor) ───
+async function renderGraduacao() {
+  const c = document.getElementById('profContent');
+  c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Registrar graduação</p><div class="loader"><span class="loader-dot"></span><span class="loader-dot"></span><span class="loader-dot"></span></div></div>`;
+
+  try {
+    const data = await apiGet({ acao: 'listarAlunos' });
+    const alunos = (data.alunos || []).sort((a,b) => a.nome.localeCompare(b.nome));
+    const faixas = ['Branca','Cinza','Amarela','Laranja','Verde','Azul','Roxa','Marrom','Preta'];
+    const graus = ['Sem grau','1º grau','2º grau','3º grau','4º grau'];
+    const cores = { 'Branca':'#fff','Cinza':'#9e9e9e','Amarela':'#f5c542','Laranja':'#f5924e','Verde':'#4caf50','Azul':'#2196f3','Roxa':'#9c27b0','Marrom':'#795548','Preta':'#444' };
+
+    c.innerHTML = `
+      <div class="card-dark card fade-in">
+        <p class="card-label">Registrar graduação</p>
+        <p style="font-size:13px;color:#666;margin-bottom:1rem;">Selecione o aluno e a nova faixa.</p>
+        <div class="grad-form">
+          <select id="gradAluno">
+            <option value="">Selecionar aluno...</option>
+            ${alunos.map(a => `<option value="${a.id}" data-faixa="${a.faixa||''}">${a.nome} — Faixa ${a.faixa||'—'}</option>`).join('')}
+          </select>
+          <select id="gradFaixa">
+            <option value="">Nova faixa...</option>
+            ${faixas.map(f => `<option value="${f}">${f}</option>`).join('')}
+          </select>
+          <select id="gradGrau">
+            <option value="">Grau (opcional)...</option>
+            ${graus.map(g => `<option value="${g}">${g}</option>`).join('')}
+          </select>
+          <button class="qr-gerar-btn" style="margin-top:4px;" onclick="registrarGraduacao()">Confirmar graduação</button>
+        </div>
+        <div id="gradSucesso" style="display:none;text-align:center;padding:1.5rem 0;">
+          <div class="success-ring" style="margin:0 auto 12px;">✓</div>
+          <p style="font-size:14px;color:#aaa;">Graduação registrada!</p>
+        </div>
+      </div>`;
+  } catch(e) {
+    c.innerHTML = `<div class="card-dark card fade-in"><p class="card-label">Registrar graduação</p><div class="err-box">Erro ao carregar alunos.</div></div>`;
+  }
+}
+
+async function registrarGraduacao() {
+  const alunoId = document.getElementById('gradAluno')?.value;
+  const faixa = document.getElementById('gradFaixa')?.value;
+  const grau = document.getElementById('gradGrau')?.value;
+  if (!alunoId || !faixa) return;
+  const btn = document.querySelector('#profContent .qr-gerar-btn');
+  if (btn) { btn.textContent = 'Registrando...'; btn.disabled = true; }
+  try {
+    const data = await apiPost({ acao: 'registrarGraduacao', alunoId, faixa, grau, professorId: usuarioAtual.id });
+    if (data.sucesso) {
+      document.querySelector('.grad-form').style.display = 'none';
+      document.getElementById('gradSucesso').style.display = 'block';
+    } else {
+      if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+    }
+  } catch(e) {
+    if (btn) { btn.textContent = 'Erro — tente novamente'; btn.disabled = false; }
+  }
+}
 
 // Restaura sessão ao carregar a página
 (function restaurarSessao() {
